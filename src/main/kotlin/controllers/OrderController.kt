@@ -2,15 +2,29 @@ package controllers
 
 import Order
 import OrderItem
+import com.example.AddBonusesRequest
 import data.models.UUIDSerializer
 import data.models.order.OrderStatus
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.serialization.Serializable
 import repositories.OrderRepository
 import java.util.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
+
 
 class OrderController(
     private val orderRepository: OrderRepository
 ) {
+
+    private val client = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json()
+        }
+    }
 
     fun createOrder(request: CreateOrderRequest): Order {
         val order = Order(
@@ -28,8 +42,28 @@ class OrderController(
         return orderRepository.updateOrderStatus(orderId, OrderStatus.COLLECTED)
     }
 
-    fun completeOrder(orderId: UUID): Order? {
-        return orderRepository.updateOrderStatus(orderId, OrderStatus.COMPLETED)
+    suspend fun completeOrder(orderId: UUID): Order? {
+        val order = orderRepository.updateOrderStatus(orderId, OrderStatus.COMPLETED)
+        if (order != null && order.userId != null) {
+            addBonuses(order.userId, calculateBonuses(order))
+        }
+
+        return order
+    }
+
+    private suspend fun addBonuses(userId: UUID, bonuses: Int) {
+        try {
+            client.patch("http://localhost:8080/users/$userId/add-bonuses") {
+                contentType(ContentType.Application.Json)
+                setBody(AddBonusesRequest(bonuses))
+            }
+        } catch (e: Exception) {
+            println("Failed to add bonuses: ${e.message}")
+        }
+    }
+
+    private fun calculateBonuses(order: Order): Int {
+        return order.items.sumOf { it.quantity * 2 }
     }
 
     fun rateOrder(orderId: UUID, rating: Int): Order? {

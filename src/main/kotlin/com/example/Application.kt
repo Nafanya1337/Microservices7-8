@@ -2,6 +2,7 @@ package com.example
 
 import controllers.OrderController
 import controllers.UserController
+import io.ktor.client.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.EngineMain

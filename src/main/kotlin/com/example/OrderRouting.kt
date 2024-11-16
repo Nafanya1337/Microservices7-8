@@ -72,6 +72,7 @@ fun Application.configureOrderRouting(orderController: OrderController) {
             val order = orderController.completeOrder(orderId)
             if (order != null) {
                 call.respond(HttpStatusCode.OK, "Order completed successfully")
+
             } else {
                 call.respond(HttpStatusCode.NotFound, "Order not found")
             }

@@ -1,15 +1,10 @@
-package com.example
-
-import controllers.OrderController
 import controllers.UserController
-import io.ktor.client.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.EngineMain
 import io.ktor.server.plugins.contentnegotiation.*
 import kotlinx.serialization.json.Json
-import repositories.OrderRepository
-import repositories.UserRepository
+import repository.UserRepository
 
 fun main(args: Array<String>) {
     DatabaseFactory.init()
@@ -26,5 +21,4 @@ fun Application.module() {
     }
 
     configureUserRouting(UserController(UserRepository()))
-    configureOrderRouting(OrderController(OrderRepository()))
 }

@@ -1,8 +1,8 @@
 package controllers
 
+import UserRole
 import data.models.user.User
-import data.models.user.UserRole
-import repositories.UserRepository
+import repository.UserRepository
 import java.util.UUID
 
 class UserController(private val userRepository: UserRepository) {

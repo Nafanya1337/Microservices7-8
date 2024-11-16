@@ -1,8 +1,5 @@
-package com.example
-
 import controllers.UserController
 import data.models.user.User
-import data.models.user.UserRole
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*

@@ -1,8 +1,7 @@
-package repositories
+package repository
 
+import UserRole
 import data.models.user.User
-import data.models.user.UserRole
-import data.models.user.Users
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*

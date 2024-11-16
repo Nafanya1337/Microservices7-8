@@ -1,18 +1,11 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    kotlin("jvm")
     alias(libs.plugins.ktor)
     alias(libs.plugins.kotlin.serialization)
 }
 
 group = "com.example"
 version = "0.0.1"
-
-application {
-    mainClass.set("io.ktor.server.netty.EngineMain")
-
-    val isDevelopment: Boolean = project.ext.has("development")
-    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
-}
 
 repositories {
     mavenCentral()
@@ -37,4 +30,8 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:3.0.1")
 
     implementation(project(":common"))
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

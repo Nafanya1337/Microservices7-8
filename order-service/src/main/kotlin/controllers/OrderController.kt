@@ -2,18 +2,16 @@ package controllers
 
 import Order
 import OrderItem
-import com.example.AddBonusesRequest
 import data.models.UUIDSerializer
-import data.models.order.OrderStatus
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import kotlinx.serialization.Serializable
-import repositories.OrderRepository
 import java.util.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.Serializable
+import repository.OrderRepository
 
 
 class OrderController(
@@ -111,3 +109,6 @@ class OrderController(
 class StateOrderException : IllegalArgumentException("Order is not in a COMPLETED state")
 
 class InvalidRatingException: IllegalArgumentException("Invalid rating")
+
+@Serializable
+data class AddBonusesRequest(val bonuses: Int)

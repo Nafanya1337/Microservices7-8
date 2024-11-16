@@ -1,10 +1,10 @@
-package repositories
+package repository
 
 import Order
 import OrderItem
 import OrderItems
+import OrderStatus
 import Orders
-import data.models.order.OrderStatus
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction

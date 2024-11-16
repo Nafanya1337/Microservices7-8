@@ -1,0 +1,6 @@
+ktor:
+  application:
+    modules:
+      - <root>.OrderApplicationKt.module
+  deployment:
+    port: 9090

@@ -15,7 +15,6 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
-    // Устанавливаем ContentNegotiation для обработки JSON
     install(ContentNegotiation) {
         json(Json {
             prettyPrint = true
@@ -24,6 +23,6 @@ fun Application.module() {
         })
     }
 
-    // Подключаем конфигурацию маршрутов
-    configureRouting(OrderController(OrderRepository()), UserController(UserRepository()))
+    configureUserRouting(UserController(UserRepository()))
+    configureOrderRouting(OrderController(OrderRepository()))
 }

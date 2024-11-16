@@ -1,18 +1,17 @@
 package com.example
 
-import controllers.OrderController
 import controllers.UserController
 import data.models.user.User
 import data.models.user.UserRole
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.response.*
 import io.ktor.server.request.*
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
-import java.util.UUID
+import java.util.*
 
-fun Application.configureRouting(orderController: OrderController, userController: UserController) {
+fun Application.configureUserRouting(userController: UserController) {
     routing {
         post("/register") {
             val user = try {

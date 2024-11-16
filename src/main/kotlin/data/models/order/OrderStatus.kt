@@ -1,6 +1,9 @@
 package data.models.order
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class OrderStatus {
-    CREATED, CANCELED, COLLECTED, COMPLETED, RATED
+    PENDING, CANCELLED, COLLECTED, COMPLETED
 }
 

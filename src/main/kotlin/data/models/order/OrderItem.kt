@@ -1,7 +1,7 @@
-import java.util.*
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class OrderItem(
-    val flowerId: UUID,
-    val quantity: Int,
-    val commentary: String
+    val itemId: Int,
+    val quantity: Int
 )

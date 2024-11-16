@@ -44,7 +44,7 @@ class OrderController(
             throw StateOrderException()
         }
 
-        order.rating = rating
+        orderRepository.updateOrderRating(orderId, rating)
 
         return order
     }
@@ -54,7 +54,7 @@ class OrderController(
             throw IllegalArgumentException("Invalid promo code")
         }
         val order = orderRepository.getOrderById(orderId)
-        order?.promoCode = promoCode
+        orderRepository.updatePromoCode(orderId, promoCode)
         return order
     }
 

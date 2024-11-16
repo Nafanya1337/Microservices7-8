@@ -2,32 +2,81 @@ package repositories
 
 import data.models.user.User
 import data.models.user.UserRole
-import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
+import data.models.user.Users
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.*
 
 class UserRepository {
-    val users = ConcurrentHashMap<UUID, User>()
 
     fun createUser(user: User): User {
-        users[user.userId] = user
+        transaction {
+            Users.insert {
+                it[userId] = user.userId
+                it[fullName] = user.fullName
+                it[phoneNumber] = user.phoneNumber
+                it[email] = user.email
+                it[password] = user.password
+                it[role] = user.role.name
+                it[bonusPoints] = user.bonusPoints
+            }
+        }
         return user
     }
 
     fun getUserById(userId: UUID): User? {
-        return users[userId]
+        return transaction {
+            Users.select { Users.userId eq userId }
+                .mapNotNull {
+                    User(
+                        userId = it[Users.userId],
+                        fullName = it[Users.fullName],
+                        phoneNumber = it[Users.phoneNumber],
+                        email = it[Users.email],
+                        password = it[Users.password],
+                        role = UserRole.valueOf(it[Users.role]),
+                        bonusPoints = it[Users.bonusPoints]
+                    )
+                }
+                .singleOrNull()
+        }
     }
 
     fun assignRole(userId: UUID, role: UserRole): User? {
-        val user = users[userId]
-        user?.role = role
-        return user
+        transaction {
+            Users.update({ Users.userId eq userId }) {
+                it[Users.role] = role.name
+            }
+        }
+        return getUserById(userId)
     }
 
     fun addBonuses(userId: UUID, bonuses: Int): User? {
-        val user = users[userId]
-        if (user != null) {
-            user.bonusPoints += bonuses
+        transaction {
+            Users.update({ Users.userId eq userId }) {
+                with(SqlExpressionBuilder) {
+                    it.update(Users.bonusPoints, Users.bonusPoints + bonuses)
+                }
+            }
         }
-        return user
+        return getUserById(userId)
+    }
+
+    fun getUserByPhoneAndPassword(phoneNumber: String, password: String): User? {
+        return transaction {
+            Users.select { (Users.phoneNumber eq phoneNumber) and (Users.password eq password) }
+                .mapNotNull {
+                    User(
+                        userId = it[Users.userId],
+                        fullName = it[Users.fullName],
+                        phoneNumber = it[Users.phoneNumber],
+                        email = it[Users.email],
+                        password = it[Users.password],
+                        role = UserRole.valueOf(it[Users.role]),
+                        bonusPoints = it[Users.bonusPoints]
+                    )
+                }
+                .singleOrNull()
+        }
     }
 }

@@ -17,7 +17,7 @@ fun Application.configureOrderRouting(orderController: OrderController) {
             val request = try {
                 call.receive<OrderController.CreateOrderRequest>()
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, "Invalid order data: ${e.message}")
+                call.respond(HttpStatusCode.BadRequest, "Invalid order data")
                 return@post
             }
 

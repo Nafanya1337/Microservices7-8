@@ -42,7 +42,13 @@ fun Application.configureUserRouting(userController: UserController) {
                 return@patch
             }
 
-            val assignRoleRequest = call.receive<AssignRoleRequest>()
+            val assignRoleRequest = try {
+                call.receive<AssignRoleRequest>()
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, "Invalid role data")
+                return@patch
+            }
+
             val updatedUser = userController.assignRole(userId, assignRoleRequest.role)
             if (updatedUser != null) {
                 call.respond(HttpStatusCode.OK, "Role assigned successfully")
@@ -75,7 +81,7 @@ fun Application.configureUserRouting(userController: UserController) {
             }
 
             val user = userController.getUserById(userId)
-            println(user)
+
             if (user != null) {
                 call.respond(HttpStatusCode.OK, user)
             } else {

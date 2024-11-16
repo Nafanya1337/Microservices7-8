@@ -11,6 +11,7 @@ import repositories.OrderRepository
 import repositories.UserRepository
 
 fun main(args: Array<String>) {
+    DatabaseFactory.init()
     EngineMain.main(args)
 }
 

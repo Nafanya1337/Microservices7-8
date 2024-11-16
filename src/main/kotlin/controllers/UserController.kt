@@ -12,7 +12,7 @@ class UserController(private val userRepository: UserRepository) {
     }
 
     fun loginUser(phoneNumber: String, password: String): User? {
-        return userRepository.users.values.find { it.phoneNumber == phoneNumber && it.password == password }
+        return userRepository.getUserByPhoneAndPassword(phoneNumber, password)
     }
 
     fun assignRole(userId: UUID, role: UserRole): User? {

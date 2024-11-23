@@ -6,7 +6,9 @@ ktor:
     port: 8080
 
 database:
-  url: "jdbc:postgresql://localhost:5432/ma_database"
-  driver: org.postgresql.Driver
-  user: postgres
-  password: 1
+  host: "$POSTGRES_HOST:postgres"
+  port: "$POSTGRES_PORT:5432"
+  user: "$POSTGRES_USER:postgres"
+  password: "$POSTGRES_PASSWORD:1"
+  name: "$POSTGRES_DB:ma_database"
+

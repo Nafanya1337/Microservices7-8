@@ -42,7 +42,7 @@ class OrderController(
 
     suspend fun completeOrder(orderId: UUID): Order? {
         val order = orderRepository.updateOrderStatus(orderId, OrderStatus.COMPLETED)
-        if (order != null && order.userId != null) {
+        if (order != null) {
             addBonuses(order.userId, calculateBonuses(order))
         }
 

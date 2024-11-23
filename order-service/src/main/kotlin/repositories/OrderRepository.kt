@@ -2,13 +2,13 @@ package repositories
 
 import Order
 import OrderItem
-import OrderItems
-import Orders
 import data.models.order.OrderStatus
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
+import utils.data.models.order.OrderItems
+import utils.data.models.order.Orders
 import java.util.*
 
 class OrderRepository {

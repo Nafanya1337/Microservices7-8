@@ -7,6 +7,20 @@ plugins {
 group = "com.example"
 version = "0.0.1"
 
+application {
+    mainClass.set("io.ktor.server.netty.EngineMain")
+
+    val isDevelopment: Boolean = project.ext.has("development")
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+
+tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+    archiveBaseName.set("order-service")
+    archiveClassifier.set("")
+    archiveVersion.set("")
+    mergeServiceFiles()
+}
+
 dependencies {
     implementation(project(":common"))
     implementation(libs.ktor.server.core)

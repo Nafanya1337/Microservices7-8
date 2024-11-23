@@ -1,0 +1,260 @@
+openapi: "3.1.0"
+info:
+  title: "Users API"
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:8080"
+paths:
+  /login:
+    post:
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "User authorized successfully"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Invalid credentials"
+  /register:
+    post:
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrationRequest"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Invalid input data"
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
+  /users/{userId}:
+    get:
+      description: ""
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Missing or invalid userId"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "User not found"
+  /users/{userId}/add-bonuses:
+    patch:
+      description: ""
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddBonusesRequest"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Missing or invalid userId"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Bonuses added successfully"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "User not found"
+  /users/{userId}/assign-role:
+    patch:
+      description: ""
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssignRoleRequest"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Invalid role data"
+                Example#2:
+                  value: "Missing or invalid userId"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Role assigned successfully"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "User not found"
+components:
+  schemas:
+    LoginRequest:
+      type: "object"
+      properties:
+        phoneNumber:
+          type: "string"
+        password:
+          type: "string"
+      required:
+      - "phoneNumber"
+      - "password"
+    RegistrationRequest:
+      type: "object"
+      properties:
+        fullName:
+          type: "string"
+        phoneNumber:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+      required:
+      - "fullName"
+      - "phoneNumber"
+      - "email"
+      - "password"
+    User:
+      type: "object"
+      properties:
+        userId:
+          type: "string"
+          format: "uuid"
+        fullName:
+          type: "string"
+        phoneNumber:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+        role:
+          type: "string"
+          enum:
+          - "ADMIN"
+          - "USER"
+          - "MODERATOR"
+        bonusPoints:
+          type: "integer"
+          format: "int32"
+      required:
+      - "userId"
+      - "fullName"
+      - "phoneNumber"
+      - "email"
+      - "password"
+      - "role"
+    AddBonusesRequest:
+      type: "object"
+      properties:
+        bonuses:
+          type: "integer"
+          format: "int32"
+    AssignRoleRequest:
+      type: "object"
+      properties:
+        role:
+          type: "string"
+          enum:
+          - "ADMIN"
+          - "USER"
+          - "MODERATOR"
+      required:
+      - "role"

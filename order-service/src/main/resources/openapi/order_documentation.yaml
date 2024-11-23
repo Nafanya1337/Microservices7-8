@@ -1,0 +1,306 @@
+openapi: "3.1.0"
+info:
+  title: "Order API"
+  version: "1.0.0"
+servers:
+- url: "http://localhost:9090"
+paths:
+  /orders:
+    post:
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequest"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Invalid order data"
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
+  /orders/{orderId}:
+    get:
+      description: ""
+      parameters:
+      - name: "orderId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Missing or invalid orderId"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Order not found"
+  /orders/{orderId}/apply-promocode:
+    patch:
+      description: ""
+      parameters:
+      - name: "orderId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplyPromoCodeRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Promo code applied successfully"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Order not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Invalid promo code"
+  /orders/{orderId}/cancel:
+    patch:
+      description: ""
+      parameters:
+      - name: "orderId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Order cancelled successfully"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Order not found"
+  /orders/{orderId}/collect:
+    patch:
+      description: ""
+      parameters:
+      - name: "orderId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Order collected successfully"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Order not found"
+  /orders/{orderId}/complete:
+    patch:
+      description: ""
+      parameters:
+      - name: "orderId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Order completed successfully"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Order not found"
+  /orders/{orderId}/rate:
+    patch:
+      description: ""
+      parameters:
+      - name: "orderId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RateOrderRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Order rated successfully"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Order not found"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+components:
+  schemas:
+    OrderItem:
+      type: "object"
+      properties:
+        itemId:
+          type: "integer"
+          format: "int32"
+        quantity:
+          type: "integer"
+          format: "int32"
+    CreateOrderRequest:
+      type: "object"
+      properties:
+        userId:
+          type: "string"
+          format: "uuid"
+        items:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/OrderItem"
+      required:
+      - "userId"
+      - "items"
+    Order:
+      type: "object"
+      properties:
+        orderId:
+          type: "string"
+          format: "uuid"
+        userId:
+          type: "string"
+          format: "uuid"
+        promoCode:
+          type: "string"
+        items:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/OrderItem"
+        status:
+          type: "string"
+          enum:
+          - "PENDING"
+          - "CANCELLED"
+          - "COLLECTED"
+          - "COMPLETED"
+        rating:
+          type: "integer"
+          format: "int32"
+        appliedBonuses:
+          type: "integer"
+          format: "int32"
+      required:
+      - "orderId"
+      - "userId"
+      - "items"
+      - "status"
+    ApplyPromoCodeRequest:
+      type: "object"
+      properties:
+        promoCode:
+          type: "string"
+      required:
+      - "promoCode"
+    RateOrderRequest:
+      type: "object"
+      properties:
+        rating:
+          type: "integer"
+          format: "int32"

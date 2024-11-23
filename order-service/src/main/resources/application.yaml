@@ -1,0 +1,11 @@
+ktor:
+  application:
+    modules:
+      - com.example.order_service.OrderServiceApplicationKt.module
+  deployment:
+    port: 9090
+database:
+  url: "jdbc:postgresql://localhost:5432/ma_database"
+  driver: org.postgresql.Driver
+  user: postgres
+  password: 1
